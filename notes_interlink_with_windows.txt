@@ -1,0 +1,25 @@
+1. Edit the hostname file:
+    sudo nano /etc/hostname
+
+    it contains  ----->    raspberrypi
+    changed the host name ------->  pi-client-1
+
+
+
+2. Edit the hosts file:
+
+        sudo nano /etc/hosts
+
+    Change the line:
+
+        127.0.1.1       raspberrypi
+    to:
+        127.0.1.1       pi-client-1
+
+And 
+    sudo reboot
+
+
+this change the hostname of the rasperripi
+
+-------------------------------------------------------------------------------------------------------

@@ -10,7 +10,7 @@ def keyboard(request):
     if request.method == 'GET':    
         
  
-        data_list = InterlinkData.objects.using('client_db').filter(comp_sr_no='1234')
+        data_list = InterlinkData.objects.using('client_db').filter(comp_sr_no='12345')
 
         print('data JJJJJJJJJJJJJJJJJJJJJJJJJ',data_list)
 

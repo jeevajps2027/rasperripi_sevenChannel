@@ -1,0 +1,253 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box; /* Includes border in the width and height calculations */
+    overflow: hidden; /* Prevents scrolling caused by overflow */
+}
+
+body {
+    font-family: Arial, sans-serif;
+    border: 5px solid lightseagreen ;
+} 
+
+
+
+.heading_container{
+    height: 15%;
+width: 100%;
+border: 1px solid black;
+display: flex; /* Enables flexbox */
+justify-content: center; /* Centers container-2-1 horizontally */
+align-items: center; /* Centers container-2-1 vertically */
+background-color: orange;
+}
+
+#center_head{
+color: purple;
+ text-shadow: 2px 2px 4px rgb(240, 118, 240);
+ font-size: 6vh;
+ font-weight: bold;
+ -webkit-text-stroke: 1px black; /* Adds a black outline */
+font-family: apple-system;
+font-style: italic;
+}
+
+.main_container{
+    height: 85%;
+width: 100%;
+border: 1px solid black;
+display: flex; /* Enables flexbox */
+justify-content: center; /* Centers container-2-1 horizontally */
+align-items: center; /* Centers container-2-1 vertically */
+background-color: rgb(217, 242, 250);
+}
+
+
+.left_container {
+width: 25%; 
+height: 100%; 
+border: 1px solid gray; 
+display: flex;
+flex-direction: column;
+gap: 10px; 
+background-color: rgb(172, 226, 247);
+
+}
+.right_container {
+width: 75%; /* Ensures two equal halves with a small gap */
+height: 100%; /* Matches the height of the parent container */
+border: 1px solid gray; /* Optional: Adds border to distinguish columns */
+display: flex;
+justify-content: center; /* Centers content horizontally in each column */
+align-items: center; /* Centers content vertically in each column */
+background-color: lightgray;
+
+}
+.toggle-btn {
+padding: 10px 20px;
+cursor: pointer;
+border: 1px solid black;
+background-color:gray;
+border-radius: 5px;
+transition: background-color 0.3s;
+height: 15%;
+width: 80%;
+font-weight: bold;
+font-size: 1.5vw;
+color: white;
+margin-left: 5%;
+margin-top: 2%;
+}
+
+.toggle-btn:hover {
+background: linear-gradient(45deg,rgb(247, 120, 247),rgb(56, 1, 56));
+transform: translateX(3px)
+}
+
+.toggle-btn.active {
+background: linear-gradient(45deg,rgb(56, 1, 56), rgb(247, 120, 247));
+transform: translateX(3px)
+}
+
+
+table {
+border-collapse: collapse;
+width: 100%;
+}
+
+th, td {
+border: 1px solid black;
+padding: 8px;
+text-align: center;
+height: 5vh;
+vertical-align: middle;
+
+}
+
+.no-outline {
+width: 100%;
+height: 100%;
+border: none;
+outline: none;
+padding: 0;
+margin: 0;
+box-sizing: border-box;
+text-align: center;
+font-size: 1.5vw;
+}
+
+
+
+label {
+display: inline-block;
+width: 150px;
+margin-top: 1%;
+text-align: center;
+font-weight: bold;
+
+}
+
+
+
+
+
+
+.container {
+        display: flex;
+        align-items: center; /* Center elements vertically */
+        justify-content: center; /* Center elements horizontally */
+        margin-top: 20px; /* Adjust as needed */
+        background-color: gray;
+        padding: 20px; /* Add padding if needed */
+    }
+
+    .label-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center; /* Center label vertically within the container */
+        margin-right: 20px; /* Adjust space between label and textarea */
+    }
+
+    .ruled-textarea {
+        width: 40vw;
+        height: 20vh;
+        line-height: 30px; /* Adjust to match the height of each line */
+        background: repeating-linear-gradient(
+            white, 
+            white 29px, /* Adjust to match the height of each line minus the border width */
+            black 30px /* Adjust to match the line-height */
+        );
+        border: 1px solid #ccc;
+        padding: 5px;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+        font-size:1.3vw;
+        resize: none; /* Prevent resizing to maintain the line structure */
+        margin-left: 2%; /* Space between textarea and label */
+    }
+
+    .ruled-textarea:focus {
+        border-color: #904caf; /* Add focus style */
+        box-shadow: 0 0 5px #904caf;
+        outline: none;
+    }
+    
+
+
+
+
+
+.item-1, .item-2{
+    border: 1px solid #ccc;
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.3s; 
+  }
+
+  #item2{
+    height: 80%;
+    width: 80%;
+  }
+
+  /* Container styling */
+.item-2 {
+    padding: 2vh 3vw;
+    background-color: #f9f9ff;
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(147, 112, 219, 0.3);
+    font-family: Arial, sans-serif;
+    width: 60vw;
+    margin: auto;
+}
+
+
+/* Wrap each label and input in a flex row */
+.form-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5vh;
+    width: 50%;
+    margin-left: 20%;
+    text-align: center;
+}
+
+/* Style the label */
+.form-row label {
+    flex: 0 0 150px; /* Fixed width for label */
+    font-weight: bold;
+    font-size: 1rem;
+    color: #333;
+}
+
+/* Style the input */
+.form-row input {
+    flex: 1;
+    padding: 1vh;
+    font-size: 1rem;
+    border: 1px solid #aaa;
+    border-radius: 8px;
+    box-sizing: border-box;
+    background-color: #fff;
+    outline-color: #d06cd5;
+    transition: border-color 0.3s ease;
+    text-align: center;
+}
+
+
+.item-2 form input:focus {
+    border-color: #a34fc1;
+}
+
+
+
+#save-btn-mail{
+  background-color: green;
+  height: 6vh;
+  width: 13vw;
+font-weight: bold;
+font-size: 1.5vw;
+color: black;
+border-radius: 10px;
+}

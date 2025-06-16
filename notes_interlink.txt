@@ -1,0 +1,52 @@
+install odbc driver:
+sudo apt-get install freetds-bin tdsodbc
+
+
+Configure FreeTDS
+
+sudo nano /etc/freetds/freetds.conf
+
+
+[your_sqlserver_alias]
+    host = <WINDOWS_SQL_SERVER_IP_OR_HOSTNAME> -----replace the servername with acutal servber name
+    port = 1433
+    tds version = 7.4
+
+
+test the connection
+    ping 192.168.1.100
+
+    tsql -S your_sqlserver_alias -U sa -P 'sai@123'
+    1> ----------as like means it correct
+
+
+
+Configure ODBC driver to use FreeTDS
+
+    sudo nano /etc/odbcinst.ini
+
+    find /usr/lib -name libtdsodbc.so ---------------this helps to find the path for libtdsodbc.so
+
+    [FreeTDS]
+    Description=FreeTDS Driver for Linux & MSSQL
+    Driver=/usr/lib/aarch64-linux-gnu/odbc/libtdsodbc.so
+    Setup=/usr/lib/aarch64-linux-gnu/odbc/libtdsS.so
+    UsageCount=1
+
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'mssql',
+        'NAME': 'CHECKDB',
+        'USER': 'sa',
+        'PASSWORD': 'sai@123',
+        'HOST': 'your_sqlserver_alias',  # use the alias you configured in freetds.conf
+        'PORT': '1433',
+        'OPTIONS': {
+            'driver': 'FreeTDS',
+            'extra_params': 'TDS_Version=7.4',
+        },
+    },
+}
+
+

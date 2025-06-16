@@ -1,0 +1,388 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'fontawesome-free-6.7.2-web/css/all.min.css' %}">
+    <script src="{% static 'jquery-jquery-f79d5f1/dist/jquery.min.js' %}"></script>
+
+  
+    <link rel="stylesheet" href="{% static 'css/customer_vals.css' %}">
+
+    <title>CUSTOMER DETAILS</title>  
+</head>
+<style>
+    #customer_name{
+width: 30vw;
+height: 5vh;
+margin-left: 1%;
+font-size: 1.5vw;
+font-weight: bold;
+text-align: center;
+}
+
+
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-box {
+  background-color: white;
+  padding: 20px 30px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 0 10px #000000aa;
+  max-width: 400px;
+}
+
+.modal-box button {
+  margin-top: 20px;
+  padding: 8px 20px;
+  font-size: 16px;
+}
+
+#notificationOkBtn:focus {
+    outline: 2px solid #007bff;
+    background-color: #e6f0ff;
+}
+
+#save-btn{
+  background-color: green;
+  height: 6vh;
+  width: 13vw;
+font-weight: bold;
+font-size: 1.3vw;
+color: black;
+border-radius: 10px;
+margin-top: 1%;
+}
+
+#cancel-btn{
+    height: 6vh;
+    width: 13vw;
+background-color:red;
+font-weight: bold;
+font-size: 1.3vw;
+color: black;
+margin-left: 10%;
+border-radius: 10px;
+margin-top: 1%;
+}
+
+#close_btn {
+    position: absolute; /* Allows placement in the corner */
+    right: 2%; /* Adjust distance from the right edge */
+    background-color: #ff4c4c; /* Button background color */
+    border: none; /* Removes border */
+    border-radius: 5px; /* Rounded corners */
+    width: 5%; /* Button width */
+    height: 5%; /* Adjust the button height */
+    display: flex; /* Flex layout for the icon */
+    justify-content: center; /* Center the icon horizontally */
+    align-items: center; /* Center the icon vertically */
+    cursor: pointer; /* Changes cursor to pointer on hover */
+}
+
+#close_btn:hover {
+    background: linear-gradient(45deg,rgb(253, 36, 36),rgb(87, 1, 1));
+    transform: translateX(3px);
+}
+
+#close_btn:active {
+    background: linear-gradient(45deg,rgb(87, 1, 1),rgb(253, 36, 36));
+    transform: translateX(3px);
+}
+
+
+#close_icon {
+    font-size: 2vw; /* Icon size */
+    color: white; /* Icon color */
+}
+</style>
+
+
+<body>
+    <div class="heading_container">
+        <center  id="center_head">
+           CUSTOMER DETAILS
+        </center>
+        <button type="button" id="close_btn">
+            <i class="fas fa-times" id="close_icon"></i>F12
+        </button>
+    </div>
+    <div class="main_container">
+       <div class="left_container">
+            <button id="customer_details" class="toggle-btn">CUSTOMER DETAILS</button>
+            <button id="mail_settings" class="toggle-btn">MAIL SETTINGS</button>
+       </div>
+       <div class="right_container">
+        <div class="item item-1" id="item1">
+        
+            <form id="customer-form" onsubmit="return validateForm()">
+            
+                <label for="customer_name" >CUSTOMER NAME:</label>
+                <input type="text" id="customer_name" name="customer_name" value="{{ customer.customer_name |default:''}}" required>
+                
+
+                <table id="prim_sec_table" style="margin-top: 10px;">
+                    <tr>
+                        <th></th>
+                        <th style="width: 20%;">CONTACT PERSON</th>
+                        <th style="width: 20%;">PH.NO</th>
+                        <th style="width: 20%;">EMAIL</th>
+                        <th style="width: 20%;">DEPT</th>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: bold;">PRIMARY</td>
+                        <td><input type="text" class="no-outline" id="primary_contact_person" value="{{ customer.primary_contact_person|default:'' }}"></td>
+                        <td><input type="text" class="no-outline" id="primary_phone_no" value="{{ customer.primary_phone_no|default:'' }}"></td>
+                        <td><input type="text" class="no-outline" id="primary_email" value="{{ customer.primary_email|default:'' }}"></td>
+                        <td><input type="text" class="no-outline" id="primary_dept" value="{{ customer.primary_dept|default:'' }}"></td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: bold;">SECONDARY</td>
+                        <td><input type="text" class="no-outline" id="secondary_contact_person" value="{{ customer.secondary_contact_person|default:'' }}"></td>
+                        <td><input type="text" class="no-outline" id="secondary_phone_no"  value="{{ customer.secondary_phone_no|default:'' }}"></td>
+                        <td><input type="text" class="no-outline" id="secondary_email"  value="{{ customer.secondary_email|default:'' }}"></td>
+                        <td><input type="text" class="no-outline" id="secondary_dept" value="{{ customer.secondary_dept|default:'' }}"></td>
+                    </tr>
+                </table>
+        
+                
+        
+                <div class="container">
+                    <div class="label-container">
+                        <label for="address" style="text-align: right;">ADDRESS:</label>
+                    </div>
+                    <textarea id="address" name="address" class="ruled-textarea" required>{{ customer.address|default:'' }}</textarea>
+                </div>
+                <a href="/comport/">
+                    <button type="button" id="cancel-btn"><b>BACK</b></button>
+                </a>
+                <button type="button" id="save-btn" onclick="saveData('customer')"><b>SAVE</b></button>
+            </form>
+        </div>
+
+
+
+        <div class="item item-2" id="item2">
+           
+                <center style="color: purple; text-shadow: 2px 2px 4px rgb(240, 118, 240);">
+                    <h2><b>MAIL SETTINGS</b></h2>
+                </center>
+                <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-row">
+                    <label>SENDER EMAIL:</label>
+                    <input type="email" id="sender_email" value="{{ mail.sender_email|default:'' }}"  required>
+                </div>
+            
+                <div class="form-row">
+                    <label>PASSWORD:</label>
+                    <input type="password" id="sender_password" value="{{ mail.sender_password|default:'' }}" required>
+                </div>
+            
+                <div class="form-row">
+                    <label>SMTP SERVER:</label>
+                    <input type="text" id="smtp_server" value="{{ mail.smtp_server|default:'' }}"  required>
+                </div>
+            
+                <div class="form-row">
+                    <label>PORT:</label>
+                    <input type="number" id="smtp_port" value="{{ mail.smtp_port|default:'587' }}" required readonly>
+                </div>
+                
+                </form>
+            
+                <a href="{% url 'comport' %}">
+                    <button type="button" id="cancel-btn"><b>BACK</b></button>
+                </a>
+                <button type="button" id="save-btn-mail" onclick="saveData('mail')"><b>SAVE</b></button>
+            
+            
+        </div>
+
+    </div>
+</div>
+
+
+            <!-- Custom Notification Modal -->
+            <div id="notificationModal" style="display: none;" class="modal-overlay">
+                <div class="modal-box">
+                  <p id="notificationMessage">This is a custom notification.</p>
+                  <button id="notificationOkBtn">OK</button>
+                </div>
+              </div>
+
+
+
+
+<script>
+
+document.getElementById("close_btn").addEventListener("click", function() {
+        // Redirect to the measurement URL
+        window.location.href = "{% url 'comport' %}";
+    });
+
+    document.addEventListener("keydown", function (event) {
+    // Check if F4 is pressed
+    if (event.key === "F12") {
+        event.preventDefault(); // Prevent default F4 behavior (optional)
+        
+        // Redirect to the Measurement page
+        window.location.href = "/comport";  // Replace with your actual path
+    }
+});
+    
+
+
+let isNotificationOpen = false;
+
+function showNotification(message) {
+    isNotificationOpen = true;
+    document.getElementById("notificationMessage").textContent = message;
+    document.getElementById("notificationModal").style.display = "flex";
+    document.getElementById("notificationOkBtn").focus();
+
+    document.getElementById("notificationOkBtn").onclick = () => {
+        document.getElementById("notificationModal").style.display = "none";
+        isNotificationOpen = false;
+
+       
+    };
+}
+    
+    document.addEventListener("DOMContentLoaded", function () {
+        const customerBtn = document.getElementById("customer_details");
+        const mailBtn = document.getElementById("mail_settings");
+    
+        const item1 = document.getElementById("item1");
+        const item2 = document.getElementById("item2");
+    
+        customerBtn.addEventListener("click", function () {
+            item1.style.display = "block";
+            item2.style.display = "none";
+    
+            customerBtn.classList.add("active");
+            mailBtn.classList.remove("active");
+        });
+    
+        mailBtn.addEventListener("click", function () {
+            item1.style.display = "none";
+            item2.style.display = "block";
+    
+            mailBtn.classList.add("active");
+            customerBtn.classList.remove("active");
+        });
+    
+        // Optional: Default state
+        customerBtn.classList.add("active");
+        item1.style.display = "block";
+        item2.style.display = "none";
+    });
+
+
+
+
+
+function saveData(formType) {
+    let formData = {};
+
+    if (formType === 'customer') {
+        // Collect customer form data
+        formData.customer_name = document.getElementById('customer_name').value;
+        formData.primary_contact_person = document.getElementById('primary_contact_person').value;
+        formData.secondary_contact_person = document.getElementById('secondary_contact_person').value;
+        formData.primary_email = document.getElementById('primary_email').value;
+        formData.secondary_email = document.getElementById('secondary_email').value;
+        formData.primary_phone_no = document.getElementById('primary_phone_no').value;
+        formData.secondary_phone_no = document.getElementById('secondary_phone_no').value;
+        formData.primary_dept = document.getElementById('primary_dept').value;
+        formData.secondary_dept = document.getElementById('secondary_dept').value;
+        formData.address = document.getElementById('address').value;
+
+    }  else if (formType === 'mail') {
+        formData.sender_email = document.getElementById('sender_email').value;
+        formData.sender_password = document.getElementById('sender_password').value;
+        formData.smtp_server = document.getElementById('smtp_server').value;
+        formData.smtp_port = document.getElementById('smtp_port').value;
+    }
+
+    // Log the form data and type for debugging
+    console.log("formData", formData);
+    console.log("formType", formType);
+
+    // // Send formData to the server
+    sendDataToServer(formData, formType);
+}
+const csrftoken = getCookie('csrftoken');
+// Function to send data to the server
+function sendDataToServer(formData, formType) {
+    fetch('/customer/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken // Use Django's CSRF token if needed
+        },
+        body: JSON.stringify({
+            formType: formType,
+            formData: formData
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Success:', data);
+        showNotification('Data saved successfully', true); // Show success notification
+        // Handle any additional success logic if needed
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+        showNotification('Error saving data: ' + error.message, false); // Show error notification
+    });
+}
+
+
+
+// Function to get the CSRF token
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+
+
+
+
+
+    </script>
+    
+        
+</body>
+</html>

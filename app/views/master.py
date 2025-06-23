@@ -51,7 +51,7 @@ def master(request):
             last_id = entry['last_id']
             
             # Retrieve full record with this last_id
-            last_record = master_data.objects.filter(id=last_id).values('id', 'probe_number', 'e', 'd', 'o1').first()
+            last_record = master_data.objects.filter(id=last_id).values('id', 'probe_number', 'e', 'd', 'o1','b','b1').first()
             
             if last_record:
                 last_probe_dict[probe_number] = last_record
@@ -65,13 +65,15 @@ def master(request):
                 "e": values.get("e"),
                 "d": values.get("d"),
                 "o1": values.get("o1"),
+                "b": values.get("b"),
+                "b1": values.get("b1"),
             }
             for probe_number, values in last_probe_dict.items()
         ]
 
          # Print values in the terminal
         for param in parameter_values:
-            print(f"Probe Name: {param['probe_number']}, ID: {param['id']}, e: {param['e']}, d: {param['d']}, o1: {param['o1']}")
+            print(f"Probe Name: {param['probe_number']}, ID: {param['id']}, e: {param['e']}, d: {param['d']}, o1: {param['o1']}, b: {param['b']}, b1: {param['b1']}")
 
 
       
@@ -86,6 +88,8 @@ def master(request):
         for setting in matching_settings:
             para_data = paraTableData.objects.filter(parameter_settings=setting).order_by("id")
 
+            print("para_data",para_data)
+
             for data in para_data:
                 channel = data.channel_no
 
@@ -93,6 +97,7 @@ def master(request):
                     grouped_data[channel] = {
                         "parameters": set(),
                         "channel_no":set(),
+                        "single_double":set(),
                         "low_master": set(),
                         "high_master": set(),
                         "nominal": set(),
@@ -110,6 +115,7 @@ def master(request):
                 grouped_data[channel]["low_master"].add(data.low_master)
                 grouped_data[channel]["high_master"].add(data.high_master)
                 grouped_data[channel]["channel_no"].add(data.channel_no)
+                grouped_data[channel]["single_double"].add(data.single_double)
                 grouped_data[channel]["nominal"].add(data.nominal)
                 grouped_data[channel]["lsl"].add(data.lsl)
                 grouped_data[channel]["usl"].add(data.usl)
@@ -130,6 +136,7 @@ def master(request):
             "high_master": [],
             "nominal": [],
             "channel_no":[],
+             "single_double":[],
             "lsl": [],
             "usl": [],
             "ltl": [],
@@ -144,6 +151,7 @@ def master(request):
             final_data["low_master"].extend(details["low_master"])
             final_data["high_master"].extend(details["high_master"])
             final_data["channel_no"].extend(details["channel_no"])
+            final_data["single_double"].extend(details["single_double"])
             final_data["nominal"].extend(details["nominal"])
             final_data["lsl"].extend(details["lsl"])
             final_data["usl"].extend(details["usl"])

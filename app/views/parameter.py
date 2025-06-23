@@ -59,6 +59,7 @@ def parameter(request):
 
                     # If parameter_name is not cleared, process the data
                     auto_man_value = row.get('auto_man', False)
+                    single_double_value = row.get('single_double',False)
 
                     existing_row = paraTableData.objects.filter(parameter_settings=existing_part_model, sr_no=sr_no).first()
 
@@ -66,6 +67,7 @@ def parameter(request):
                         # If the row exists, update it
                         existing_row.parameter_name = parameter_name
                         existing_row.channel_no = row.get('channel_no')
+                        existing_row.single_double = single_double_value
                         existing_row.low_master = row.get('low_master')
                         existing_row.high_master = row.get('high_master')
                         existing_row.nominal = row.get('nominal')
@@ -86,6 +88,7 @@ def parameter(request):
                             parameter_settings=existing_part_model,
                             sr_no=sr_no,
                             parameter_name=parameter_name,
+                            single_double = single_double_value,
                             channel_no=row.get('channel_no'),
                             low_master=row.get('low_master'),
                             high_master=row.get('high_master'),
@@ -139,6 +142,7 @@ def parameter(request):
                         sr_no=sr_no,
                         parameter_name=parameter_name,
                         channel_no=row.get('channel_no'),
+                        single_double = row.get('single_double',False),
                         low_master=row.get('low_master'),
                         high_master=row.get('high_master'),
                         nominal=row.get('nominal'),
@@ -198,6 +202,7 @@ def parameter(request):
                         "sr_no": row.sr_no,
                         "parameter_name": row.parameter_name,
                         "channel_no": row.channel_no,
+                        "single_double": row.single_double,
                         "low_master": row.low_master,
                         "high_master": row.high_master,
                         "nominal": row.nominal,

@@ -18,6 +18,7 @@ class paraTableData(models.Model):
     sr_no = models.CharField(max_length=10)
     parameter_name = models.CharField(max_length=100, blank=True)
     channel_no = models.CharField(max_length=10, blank=True)
+    single_double = models.BooleanField(default=False)
     low_master = models.CharField(max_length=100, blank=True)
     high_master = models.CharField(max_length=100, blank=True)
     nominal = models.CharField(max_length=100, blank=True)

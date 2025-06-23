@@ -56,6 +56,7 @@ def measurement(request):
         auto_man_array = []
         timer_array = []
         digits_array = []
+        single_double_array = []
 
         for data in related_data:
             parameter_name_array.append(data.parameter_name)
@@ -71,6 +72,7 @@ def measurement(request):
             auto_man_array.append(data.auto_man)
             timer_array.append(data.timer)
             digits_array.append(data.digits)
+            single_double_array.append(data.single_double)
 
         parameter_factor_values = ParameterFactor.objects.filter(part_model=part_model_get).values('parameter_name','method','value').order_by('id')
 
@@ -108,7 +110,7 @@ def measurement(request):
             last_id = entry['last_id']
             
             # Retrieve full record with this last_id
-            last_record = master_data.objects.filter(id=last_id).values('id', 'probe_number', 'e', 'd', 'o1','a1','b1').first()
+            last_record = master_data.objects.filter(id=last_id).values('id', 'probe_number', 'e', 'd', 'o1','a1','b1','b').first()
             
             if last_record:
                 last_probe_dict[probe_number] = last_record
@@ -124,6 +126,7 @@ def measurement(request):
                 "o1": values.get("o1"),
                 "a1": values.get("a1"),
                 "b1": values.get("b1"),
+                "b" : values.get("b"), 
             }
             for probe_number, values in last_probe_dict.items()
         ]
@@ -152,6 +155,7 @@ def measurement(request):
             'auto_man_array': auto_man_array,
             'timer_array': timer_array,
             'digits_array': digits_array,
+            'single_double_array':single_double_array,
             'parameter_values':parameter_values,
             'parameter_factor_values':list(parameter_factor_values),
         })

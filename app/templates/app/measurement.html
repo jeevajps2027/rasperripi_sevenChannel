@@ -808,6 +808,7 @@ function sendPartModelToBackend(partModel) {
                 autoManArray: response.auto_man_array,
                 timerArray: response.timer_array,
                 digitsArray: response.digits_array,
+                singleDoubleArray : response.single_double_array,
                 parameter_factor_values:response.parameter_factor_values,
             };
 
@@ -899,9 +900,10 @@ function updateUI(responseData) {
         const autoMan = responseData.autoManArray[index];
         const timer = responseData.timerArray[index];
         const digits = responseData.digitsArray[index];
+        const single_double = responseData.singleDoubleArray[index]; 
         const parameter_factor_values = responseData.parameter_factor_values;
 
-        let e_value = 0, d_value = 0, o1_value = 0, a1_value = 0;
+        let e_value = 0, d_value = 0, o1_value = 0, a1_value = 0 ,b_value = 0,b1_value = 0;
         let probeData = responseData.parameterValues.find(item => item.probe_number === String(probeNumber));
 
         if (probeData) {
@@ -909,7 +911,9 @@ function updateUI(responseData) {
             d_value = probeData.d || 0;
             o1_value = probeData.o1 || 0;
             a1_value = probeData.a1 || 0;
-            console.log(`Probe Number: ${probeData.probe_number}, E: ${e_value}, D: ${d_value}, O1: ${o1_value}`);
+            b_value = probeData.b || 0;
+            b1_value = probeData.b1 || 0;
+            console.log(`Probe Number: ${probeData.probe_number}, E: ${e_value}, D: ${d_value}, O1: ${o1_value} , B:${b_value},B1:${b1_value}`);
         } else {
             console.log("No Probe Data Found for Channel:", probeNumber);
         }
@@ -924,7 +928,7 @@ function updateUI(responseData) {
         if (stepNo === currentStep.toString()) {
             displaySerialData(
                 parameterName, probeNumber, lowMaster, highMaster, lsl, usl, ltl, utl, 
-                stepNo, autoMan, timer, digits, e_value, d_value, o1_value, gaugeIndex, a1_value,parameter_factor_values
+                stepNo, autoMan, timer, digits, e_value, d_value, o1_value, gaugeIndex, a1_value,parameter_factor_values,single_double,b_value,b1_value
             );
         }
 
@@ -947,7 +951,7 @@ function updateUI(responseData) {
                 if (stepNo === currentStep.toString()) {
                     displaySerialData(
                         parameterName, probeNumber, lowMaster, highMaster, lsl, usl, ltl, utl, 
-                        stepNo, autoMan, timer, digits, e_value, d_value, o1_value, gaugeIndex, a1_value,parameter_factor_values
+                        stepNo, autoMan, timer, digits, e_value, d_value, o1_value, gaugeIndex, a1_value,parameter_factor_values,single_double,b_value,b1_value
                     );
                 }
             }
@@ -1328,7 +1332,7 @@ let gaugeOutputs = {};
 let probeIntervals = {}; // Store intervals for each Step, Probe, and Gauge
 let activeStep = null; // Track the current step
 
-function displaySerialData(parameterName, probeNumber, lowMaster, highMaster, lsl, usl, ltl, utl, stepNo, autoMan, timer, digits, e_value, d_value, o1_value, gaugeIndex, a1_value,parameter_factor_values) {
+function displaySerialData(parameterName, probeNumber, lowMaster, highMaster, lsl, usl, ltl, utl, stepNo, autoMan, timer, digits, e_value, d_value, o1_value, gaugeIndex, a1_value,parameter_factor_values,single_double,b_value,b1_value) {
     console.log("StepNo:", stepNo);
     console.log("parameterName:", parameterName);
     console.log("autoMan:", autoMan);
@@ -1336,6 +1340,12 @@ function displaySerialData(parameterName, probeNumber, lowMaster, highMaster, ls
     console.log("a1_value:", a1_value);
     console.log("gaugeIndex:", gaugeIndex);
     console.log("probeNumber:", probeNumber);
+
+    console.log("single_doublem jjjjjjjjjjjjjjjjjjj:", single_double);
+    console.log("b_value:", b_value);
+    console.log("b1_value:", b1_value);
+
+   
 
 
     console.log("parameter_factor_values jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",parameter_factor_values)
@@ -1387,8 +1397,21 @@ function displaySerialData(parameterName, probeNumber, lowMaster, highMaster, ls
         const numericEValue = parseFloat(e_value) || 0;
         const numericDValue = parseFloat(d_value) || 0;
         const numericO1Value = parseFloat(o1_value) || 0;
+        const numericBValue = parseFloat(b_value) || 0;
+        const numericB1Value = parseFloat(b1_value) || 0;
 
-        let displayOutput = numericEValue + (newSerialData * numericDValue + numericO1Value);
+        let displayOutput;
+
+        if (single_double === true) {
+            // ✅ SINGLE mastering formula
+            const displayOutput1 = (newSerialData - numericB1Value) * numericDValue;
+            displayOutput = displayOutput1 + numericEValue + numericBValue;
+            console.log(`🔹 Using SINGLE mastering formula for gauge ${gaugeIndex}`);
+        } else {
+            // 🔸 DOUBLE mastering formula (default)
+            displayOutput = numericEValue + (newSerialData * numericDValue + numericO1Value);
+            console.log(`🔸 Using DOUBLE mastering formula for gauge ${gaugeIndex}`);
+        }
         displayOutput = parseFloat(displayOutput.toFixed(digits));
 
          // 🔁 Apply factor-based logic here

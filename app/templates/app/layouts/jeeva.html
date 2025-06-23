@@ -208,9 +208,7 @@
             <tr>
                 <th style="width: 5%;">SR.NO</th>
                 <th style="width: 15%;">PARAMETER NAME</th>
-              
                 <th style="width: 6%;">CHANNEL NO</th>
-                <th style="width: 6%;">SINGLE / DOUBLE</th>
                 <th style="width: 8%;">LOW MASTER</th>
                 <th style="width: 8%;">HIGH MASTER</th>
                 <th style="width: 6%;">NOMINAL</th>
@@ -690,7 +688,6 @@ function resetFormAndTable() {
     allRowsData.forEach(row => {
         row.parameter_name = "";
         row.channel_no = "1";
-        row.single_double = false;
         row.low_master = "";
         row.high_master = "";
         row.nominal = "";
@@ -760,20 +757,19 @@ $(document).ready(function () {
 
             allRowsData[globalIndex].parameter_name = cells.eq(1).find('input').val()?.trim() || '';
             allRowsData[globalIndex].channel_no = cells.eq(2).find('button').text()?.trim() || '';
-            allRowsData[globalIndex].single_double = cells.eq(3).find('input[type="checkbox"]').is(':checked');
-            allRowsData[globalIndex].low_master = cells.eq(4).find('input').val()?.trim() || '';
-            allRowsData[globalIndex].high_master = cells.eq(5).find('input').val()?.trim() || '';
-            allRowsData[globalIndex].nominal = cells.eq(6).find('input').val()?.trim() || '';
-            allRowsData[globalIndex].lsl = cells.eq(7).find('input').val()?.trim() || '';
-            allRowsData[globalIndex].usl = cells.eq(8).find('input').val()?.trim() || '';
-            allRowsData[globalIndex].ltl = cells.eq(9).find('input').val()?.trim() || '';
-            allRowsData[globalIndex].utl = cells.eq(10).find('input').val()?.trim() || '';
-            allRowsData[globalIndex].master_grp = cells.eq(11).find('button').text()?.trim() || '';
-            allRowsData[globalIndex].step_no = cells.eq(12).find('button').text()?.trim() || '';
-            allRowsData[globalIndex].auto_man = cells.eq(13).find('input[type="checkbox"]').is(':checked');
-            allRowsData[globalIndex].timer = cells.eq(14).find('input').val()?.trim() || '';
-            allRowsData[globalIndex].digits = cells.eq(15).find('button').text()?.trim() || '';
-            allRowsData[globalIndex].id_od = cells.eq(16).find('button').text()?.trim() || '';
+            allRowsData[globalIndex].low_master = cells.eq(3).find('input').val()?.trim() || '';
+            allRowsData[globalIndex].high_master = cells.eq(4).find('input').val()?.trim() || '';
+            allRowsData[globalIndex].nominal = cells.eq(5).find('input').val()?.trim() || '';
+            allRowsData[globalIndex].lsl = cells.eq(6).find('input').val()?.trim() || '';
+            allRowsData[globalIndex].usl = cells.eq(7).find('input').val()?.trim() || '';
+            allRowsData[globalIndex].ltl = cells.eq(8).find('input').val()?.trim() || '';
+            allRowsData[globalIndex].utl = cells.eq(9).find('input').val()?.trim() || '';
+            allRowsData[globalIndex].master_grp = cells.eq(10).find('button').text()?.trim() || '';
+            allRowsData[globalIndex].step_no = cells.eq(11).find('button').text()?.trim() || '';
+            allRowsData[globalIndex].auto_man = cells.eq(12).find('input[type="checkbox"]').is(':checked');
+            allRowsData[globalIndex].timer = cells.eq(13).find('input').val()?.trim() || '';
+            allRowsData[globalIndex].digits = cells.eq(14).find('button').text()?.trim() || '';
+            allRowsData[globalIndex].id_od = cells.eq(15).find('button').text()?.trim() || '';
         });
 
         // ⮕ Step 2: Now validate full allRowsData (21 rows)
@@ -861,33 +857,6 @@ $(document).ready(function () {
                     }
                 }
             }
-
-            let masterGrpGroups = {};
-
-// 🧩 Group rows by MASTER_GRP — only if parameter_name is filled
-allRowsData.forEach((row, index) => {
-    if (row.parameter_name.trim() === "") return;  // Skip empty rows
-
-    const masterGrp = row.master_grp;
-    if (masterGrp) {
-        if (!masterGrpGroups[masterGrp]) masterGrpGroups[masterGrp] = [];
-        masterGrpGroups[masterGrp].push({ rowIndex: index + 1, single_double: row.single_double });
-    }
-});
-
-// ✅ Validate SINGLE_DOUBLE consistency within each MASTER_GRP
-for (let grp in masterGrpGroups) {
-    const groupRows = masterGrpGroups[grp];
-    const allChecked = groupRows.every(r => r.single_double);
-    const noneChecked = groupRows.every(r => !r.single_double);
-
-    if (!allChecked && !noneChecked) {
-        const rowNumbers = groupRows.map(r => r.rowIndex).join(", ");
-        validationFailed = true;
-        validationMessage += `MASTER_GRP ${grp}: Rows [${rowNumbers}] must have the same SINGLE_DOUBLE checkbox state (all checked or all unchecked).\n`;
-    }
-}
-
         });
 
         // ⮕ Validate STEP_NO rules
@@ -911,7 +880,6 @@ for (let grp in masterGrpGroups) {
                 validationMessage += `Step ${step}: All TIMER values must match when AUTO_MAN is checked.\n`;
             }
         }
-        
 
         if (validationFailed) {
             showNotifications(`Validation Error:\n${validationMessage}`);
@@ -1020,7 +988,6 @@ function sendPartModelToBackend(partModel) {
                         sr_no: allRowsData.length + 1,
                         parameter_name: '',
                         channel_no: '1',
-                        single_double : false,
                         low_master: '',
                         high_master: '',
                         nominal: '',
@@ -1053,7 +1020,6 @@ function sendPartModelToBackend(partModel) {
                 sr_no: allRowsData.length + 1,
                 parameter_name: '',
                 channel_no: '1',
-                single_double : false,
                 low_master: '',
                 high_master: '',
                 nominal: '',
@@ -1089,7 +1055,6 @@ function renderTableRows(page) {
                 <td><input type="text" class="focusable" value="${row.sr_no}" readonly></td>
                 <td><input type="text" class="focusable" value="${row.parameter_name}"></td>
                 <td><button class="cycle-button focusable" data-column="channel_no">${row.channel_no}</button></td>
-                <td><input type="checkbox" ${row.single_double ? 'checked' : ''} class="single-double-checkbox focusable"></td>
                 <td><input type="text" class="number-only focusable" value="${row.low_master}"></td>
                 <td><input type="text" class="number-only focusable" value="${row.high_master}"></td>
                 <td><input type="text" class="number-only focusable" value="${row.nominal}"></td>
